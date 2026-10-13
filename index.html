@@ -529,6 +529,12 @@ label.flash>span{animation:flash 1.6s ease}
 .field.flash-f{animation:flashF 1.6s ease-out}@keyframes flashF{0%,40%{box-shadow:0 0 0 4px var(--gold);border-radius:10px}100%{box-shadow:0 0 0 0 transparent}}
 @media (prefers-reduced-motion:reduce){.field.flash-f{animation:none}}
 .menu-how{margin:0 0 14px;padding:12px 14px;border-radius:10px;background:var(--gold-soft);border:1px solid var(--gold-deep);color:var(--plum-2)}
+.menu-how{display:grid;gap:10px}
+.menu-how .mh-item{display:grid;gap:2px}
+.menu-how .mh-item b{font-size:1.05rem;color:var(--plum-2)}
+.menu-how .mh-item b::before{content:"\279C";display:inline-grid;place-items:center;width:22px;height:22px;margin-right:7px;border-radius:50%;background:var(--plum);color:var(--gold);font-size:.75rem;vertical-align:1px}
+.menu-how .mh-item span{padding-left:29px}
+.menu-how .mh-note{margin:2px 0 0;font-weight:700}
 .menu-card{position:relative;max-width:360px;margin:0 auto;padding:26px 22px;background:#fff;border:1px solid var(--gold-deep);outline:6px double var(--gold-soft);outline-offset:-14px;border-radius:6px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .menu-card[hidden]{display:none}
 .menu-card .mc-k{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);font-weight:800}
@@ -967,7 +973,12 @@ footer .brand{font-size:1.05rem}
     </div>
 
     <h3 style="font-size:1.45rem;color:var(--plum-2);margin:28px 0 6px"><span class="step-n">1</span> Choose your menu</h3>
-    <p class="menu-how"><b>Buffet:</b> you pick what goes on your buffet table (1 starter, 2 mains, 2 starches, 2 sides and 1 dessert) and guests help themselves. <b>Build your menu:</b> 1 starter, 2 mains for guests to choose from, 1 starch, 2 sides and 1 dessert, printed on a menu card and served at the table. <b>Personalised menu:</b> built just like the buffet, printed with your names and each guest's name at every seat. You can always add <b>up to 3 extra dishes</b>.</p>
+    <div class="menu-how">
+      <div class="mh-item"><b>Buffet</b><span>You pick what goes on your buffet table: 1 starter, 2 mains, 2 starches, 2 sides and 1 dessert. Guests help themselves.</span></div>
+      <div class="mh-item"><b>Build your menu</b><span>1 starter, 2 mains for guests to choose from, 1 starch, 2 sides and 1 dessert, printed on a menu card and served at the table.</span></div>
+      <div class="mh-item"><b>Personalised menu</b><span>Built just like the buffet, printed with your names and each guest's name at every seat.</span></div>
+      <p class="mh-note">You can always add up to 3 extra dishes.</p>
+    </div>
     <h3 style="font-size:1.45rem;color:var(--plum-2);margin:28px 0 6px"><span class="step-n">2</span> Choose your serving style</h3>
     <p class="fine" style="margin:0 0 10px">For <b>Build your menu</b> and <b>Personalised menu</b> only. A buffet is self-serve, so it does not need a serving style.</p>
     <div class="styles-group" id="styles-relaxed">
