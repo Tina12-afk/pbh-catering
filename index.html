@@ -551,9 +551,11 @@ label.flash>span{animation:flash 1.6s ease}
 .idk-hint .ar{display:inline-block;animation:idkb 1.4s ease-in-out infinite}
 @keyframes idkb{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 .idk-hint:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.idk-end.flash{animation:idkf 1.6s ease}
-@keyframes idkf{0%,60%{box-shadow:0 0 0 4px var(--gold)}100%{box-shadow:0 6px 18px rgba(0,0,0,.08)}}
-@media (prefers-reduced-motion:reduce){.idk-hint .ar,.idk-end.flash{animation:none}}
+.idk-end.flash{animation:idkf 1.3s ease-in-out 3;border-color:var(--gold);background:#FFF8E1}
+.idk-end.flash .idk{animation:idkb2 1.3s ease-in-out 3}
+@keyframes idkf{0%,100%{box-shadow:0 0 0 3px var(--gold),0 6px 18px rgba(0,0,0,.08)}50%{box-shadow:0 0 0 9px rgba(246,186,63,.55),0 0 28px rgba(246,186,63,.6)}}
+@keyframes idkb2{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@media (prefers-reduced-motion:reduce){.idk-hint .ar,.idk-end.flash,.idk-end.flash .idk{animation:none}.idk-end.flash{box-shadow:0 0 0 5px var(--gold)}}
 .idk-end{clear:both;text-align:center;margin:34px auto 6px;padding:18px 16px 16px;max-width:520px;background:#fff;border:1px solid rgba(90,40,90,.18);border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
 .idk-end p{margin:0 0 12px !important;font:700 1rem/1.4 var(--body) !important;color:var(--plum-2) !important;letter-spacing:0 !important;text-transform:none !important}
 .idk-end .idk{margin:0;background:var(--plum-2);color:#fff;border-color:var(--plum-2);box-shadow:none}
@@ -1343,8 +1345,8 @@ footer .brand{font-size:1.05rem}
         <div class="approve-box"><b>This is not a confirmed booking yet.</b> PBH Catering &amp; Events will check your request and email you within <b>48 hours</b> to let you know if it is approved. Please <b>don't pay a deposit</b> until you receive our approval email.</div>
         <p class="mail-status" id="mailStatus" role="status">Sending your booking request…</p>
         <div class="retry-row" id="retryRow" hidden><button class="btn btn-plum" type="button" id="retryBtn">Try sending again</button></div>
-        <form id="fsForm" action="https://formsubmit.co/admin@pbhgroup.co.bw" method="POST" target="_blank" hidden>
-          <input type="hidden" name="_subject" id="fs-subj"><input type="hidden" name="_cc" value="tina.personal.2006@gmail.com,peter@pbhgroup.co.bw"><input type="hidden" name="_template" value="box"><input type="hidden" name="_captcha" value="false">
+        <form id="fsForm" action="https://formsubmit.co/tina.personal.2006@gmail.com" method="POST" target="_blank" hidden>
+          <input type="hidden" name="_subject" id="fs-subj"><input type="hidden" name="_cc" value="admin@pbhgroup.co.bw,peter@pbhgroup.co.bw"><input type="hidden" name="_template" value="box"><input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_replyto" id="fs-reply"><input type="hidden" name="Name" id="fs-name"><input type="hidden" name="Phone" id="fs-phone">
           <textarea name="Booking" id="fs-body" hidden></textarea>
         </form>
@@ -2052,7 +2054,7 @@ footer .brand{font-size:1.05rem}
   function phoneFull(){var n=$('f-phone').value.trim(),c=($('f-cc')||{}).value||'';if(!n)return '';if(/^\+/.test(n))return n;n=n.replace(/^0+/,'');return c+' '+n}
   function fullName(){return ($('f-name').value.trim()+' '+(($('f-surname')||{}).value||'').trim()).trim()}
   // Booking emails: sent automatically to EMAIL through FormSubmit (first booking triggers a one-time activation email to that inbox).
-  var EMAIL='admin@pbhgroup.co.bw', CC='tina.personal.2006@gmail.com,peter@pbhgroup.co.bw', lastSubj='', lastBody='';
+  var EMAIL='tina.personal.2006@gmail.com', CC='admin@pbhgroup.co.bw,peter@pbhgroup.co.bw', EMAIL2='admin@pbhgroup.co.bw', CC2='tina.personal.2006@gmail.com,peter@pbhgroup.co.bw', lastSubj='', lastBody='';
   function setStatus(kind,msg){var st=$('mailStatus');st.className='mail-status '+kind;st.textContent='';var i=document.createElement('span');i.className='ms-ico';i.setAttribute('aria-hidden','true');i.textContent=kind==='ok'?'\u2713':kind==='err'?'\u2715':'\u2026';st.appendChild(i);var t=document.createElement('span');t.innerHTML=msg;st.appendChild(t)}
   function fillFs(subj,body){$('fs-subj').value=subj;$('fs-reply').value=$('f-email').value.trim();$('fs-name').value=fullName();$('fs-phone').value=phoneFull();$('fs-body').value=body}
   function sendEmail(subj,body){
@@ -2063,9 +2065,10 @@ footer .brand{font-size:1.05rem}
     var ok=function(){done=true;$('retryRow').hidden=true;setStatus('ok','<b>Request sent!</b> Your booking request is with PBH Catering &amp; Events and is <b>waiting for approval</b>. We will email you within 48 hours.')};
     var timer=setTimeout(fail,40000);
     try{
-      fetch('https://formsubmit.co/ajax/'+EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify({_subject:subj,_cc:CC,_template:'box',_captcha:'false',_replyto:$('f-email').value.trim()||undefined,Name:fullName(),Phone:phoneFull(),Booking:body})})
-      .then(function(r){return r.json()}).then(function(j){clearTimeout(timer);if(j&&(j.success===true||String(j.success)==='true'))ok();else{if(j&&/activat/i.test(j.message||'')){clearTimeout(timer);done=true;$('retryRow').hidden=true;setStatus('err','<b>Not sent by email yet.</b> Our email inbox is still being set up. Please tap <b>Send on WhatsApp</b> below so we receive your request.');return}if(j&&j.message&&window.console)console.warn('Booking email:',j.message);fail()}}).catch(function(){clearTimeout(timer);fail()});
+      var send=function(to,cc){return fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({_subject:subj,_cc:cc,_template:'box',_captcha:'false',_replyto:$('f-email').value.trim()||undefined,Name:fullName(),Phone:phoneFull(),Booking:body})}).then(function(r){return r.json()})};
+      var good=function(j){return j&&(j.success===true||String(j.success)==='true')};
+      send(EMAIL,CC).then(function(j){if(good(j))return j;return send(EMAIL2,CC2)}).then(function(j){clearTimeout(timer);if(good(j))ok();else{if(j&&j.message&&window.console)console.warn('Booking email:',j.message);done=false;fail()}}).catch(function(){clearTimeout(timer);fail()});
     }catch(e){clearTimeout(timer);fail()}
   }
   $('retryBtn').addEventListener('click',function(){
@@ -2520,7 +2523,7 @@ footer .brand{font-size:1.05rem}
     var box=document.createElement('div');box.className='idk-end';box.innerHTML='<p>Looked through everything and still not sure how it works?</p>';box.appendChild(b);
     var w=last.querySelector(':scope > .wrap')||last;w.appendChild(box);
     var h=document.createElement('button');h.type='button';h.className='idk-hint';h.innerHTML='<span aria-hidden="true">&#9654;</span> Need help? There\'s a how-to video at the bottom of this page <span class="ar" aria-hidden="true">&darr;</span>';
-    h.addEventListener('click',function(){box.scrollIntoView({behavior:'smooth',block:'center'});box.classList.remove('flash');void box.offsetWidth;box.classList.add('flash')});
+    h.addEventListener('click',function(){box.scrollIntoView({behavior:'smooth',block:'center'});box.classList.remove('flash');clearTimeout(box._ft);clearTimeout(box._fe);box._ft=setTimeout(function(){void box.offsetWidth;box.classList.add('flash');box._fe=setTimeout(function(){box.classList.remove('flash')},4200)},650)});
     var head=pg.querySelector('.sec-head');
     if(name==='home'){var c=pg.querySelector('.cta');if(c){c.parentNode.insertBefore(h,c.nextSibling);return}}
     if(name==='about'){var cp=pg.querySelector('.about .copy');if(cp){cp.insertBefore(h,cp.firstChild);return}}
